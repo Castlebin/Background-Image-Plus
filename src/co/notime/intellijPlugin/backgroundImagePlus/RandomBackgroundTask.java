@@ -9,7 +9,7 @@ public class RandomBackgroundTask implements Runnable {
     private final ImagesHandler imagesHandler = new ImagesHandler();
 
     public void run() {
-        new Thread(BingImage::download).start();
+        BingImage.download();
 
         PropertiesComponent prop = PropertiesComponent.getInstance();
         String folder = prop.getValue("BackgroundImagesFolder");
