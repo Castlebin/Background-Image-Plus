@@ -14,15 +14,21 @@ public class BingImage {
 
     public static String download() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String date = sdf.format(new Date());
+        Date now = new Date();
+        String date = sdf.format(now);
 
-        File imgDir = new File(DEFAULT_BG_DIR);
-        if (!imgDir.exists()) {
-            imgDir.mkdir();
+        File imgBaseDir = new File(DEFAULT_BG_DIR);
+        if (!imgBaseDir.exists()) {
+            imgBaseDir.mkdir();
             NotificationCenter.notice("Image stored in " + DEFAULT_BG_DIR);
         }
+        String month = new SimpleDateFormat("yyyyMM").format(now);
+        File imageDir = new File(DEFAULT_BG_DIR + File.separator + month);
+        if (!imageDir.exists()) {
+            imageDir.mkdir();
+        }
 
-        File imageFile = new File(DEFAULT_BG_DIR, date + "_bing.jpg");
+        File imageFile = new File(imageDir, date + "_bing.jpg");
         if (imageFile.exists()) {
             return imageFile.getAbsolutePath();
         }
@@ -40,18 +46,15 @@ public class BingImage {
         URL url = new URL(imgUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
-        InputStream is = conn.getInputStream();
         File newImageFile = new File(localFilePath);
-        BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(newImageFile));
-
-        byte[] buf = new byte[8192];
-        int size;
-        while ((size = is.read(buf)) != -1) {
-            os.write(buf, 0, size);
+        try (InputStream is = conn.getInputStream();
+             BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(newImageFile));) {
+            byte[] buf = new byte[8192];
+            int size;
+            while ((size = is.read(buf)) != -1) {
+                os.write(buf, 0, size);
+            }
         }
-
-        is.close();
-        os.close();
 
         return newImageFile.getAbsolutePath();
     }
@@ -65,8 +68,7 @@ public class BingImage {
         String tag = "background-image: url(";
         int p1 = bingHomeHtml.indexOf(tag);
         int p2 = bingHomeHtml.indexOf(')', p1);
-        String img = bingHomeHtml.substring(p1 + tag.length(), p2);
-        return BING_BASE_URL + img;
+        return bingHomeHtml.substring(p1 + tag.length(), p2);
     }
 
     private static String getBingHomeHtml() throws IOException {
