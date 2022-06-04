@@ -9,6 +9,8 @@ public class RandomBackgroundTask implements Runnable {
     private ImagesHandler imagesHandler = new ImagesHandler();
 
     public void run() {
+        BingImage.download();
+
         PropertiesComponent prop = PropertiesComponent.getInstance();
         String folder = prop.getValue("BackgroundImagesFolder");
 
@@ -37,8 +39,6 @@ public class RandomBackgroundTask implements Runnable {
         prop.setValue("idea.background.frame", null);
         prop.setValue("idea.background.editor", image);
         IdeBackgroundUtil.repaintAllWindows();
-
-        BingImage.download();
     }
 
 }

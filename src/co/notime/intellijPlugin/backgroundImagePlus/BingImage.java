@@ -55,7 +55,7 @@ public class BingImage {
                 os.write(buf, 0, size);
             }
         }
-
+        NotificationCenter.notice("Download Image stored in " + newImageFile.getAbsolutePath());
         return newImageFile.getAbsolutePath();
     }
 

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="backgroundImagePlus">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/backgroundImagePlus.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
